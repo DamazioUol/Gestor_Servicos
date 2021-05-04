@@ -2,7 +2,8 @@ import { createContext, useEffect, useState } from 'react';
 import { StorageConstants } from '../../environment/Storage';
 import IPaginationData from '../../models/Pagination/IPaginationData.interface';
 import Service from '../../models/Service.model';
-import Todo from '../../models/Todo.model';
+import Todo from '../../models/Todo/Todo.model';
+import { TodoStatusEnum } from '../../models/Todo/TodoStatusEnum';
 import { GetStorage, SaveStorage } from '../../services/Storage/StorageServices';
 import { generateGuid } from '../../utils/Utils';
 import { ITodoContextType } from './ITodoContextType';
@@ -15,8 +16,7 @@ export const TodoContext = createContext<ITodoContextType>({
     addTodo: () => { return true },
     editTodo: () => { return true },
     removeTodo: () => { return true },
-    toogle: () => { },
-    getInfo: () => { return null },
+    getItem: () => { return null },
 });
 
 const TodoProvider = (props: any) => {
@@ -66,12 +66,20 @@ const TodoProvider = (props: any) => {
         return retorno;
     };
 
-    const getInfo = (id: string) => {
+    const getItem = (id: string) => {
         return todos?.find(x => x.id === id) || null;
     };
 
     const addTodo = (services: Service[], valorTotal: number, placa: string, modelo: string) => {
-        let todo: Todo = { id: generateGuid(), services: services, valorTotal: valorTotal, placa: placa.toLocaleUpperCase(), modelo: modelo, done: false, date: new Date(Date.now()) };
+        let todo: Todo = {
+            id: generateGuid(),
+            services: services,
+            valorTotal: valorTotal,
+            placa: placa.toLocaleUpperCase(),
+            modelo: modelo,
+            status: TodoStatusEnum.pendente,
+            date: new Date(Date.now())
+        };
         setTodos([...todos, todo]);
     };
 
@@ -80,7 +88,7 @@ const TodoProvider = (props: any) => {
         setTodos([...newTodos]);
     }
 
-    const editTodo = (todo: Todo) => {
+    const editTodo = (todo: Todo, status?: TodoStatusEnum) => {
         let update: boolean = false;
         todos.forEach(task => {
             if (task.id === todo.id) {
@@ -89,6 +97,7 @@ const TodoProvider = (props: any) => {
                 task.placa = todo.placa.toLocaleUpperCase();
                 task.services = todo.services;
                 task.valorTotal = todo.valorTotal;
+                task.status = status ? status : todo.status;
                 update = true;
                 return;
             }
@@ -99,17 +108,8 @@ const TodoProvider = (props: any) => {
         }
     }
 
-    const toogle = (todo: Todo) => {
-        let indexTodo = todos.findIndex(x => x.id === todo.id);
-        if (indexTodo !== -1) {
-            todos[indexTodo].done = !todos[indexTodo].done;
-            todos[indexTodo].modified = new Date(Date.now());
-            setTodos([...todos]);
-        }
-    };
-
     const state = {
-        getList, editTodo, addTodo, removeTodo, toogle, getInfo,
+        getList, editTodo, addTodo, removeTodo, getItem,
     }
 
     return (

@@ -10,13 +10,19 @@ import TodoList from "./Todo/Page/TodoList";
 
 const App = () => {
     return (
-        <ServiceContext>
-            <TodoContext>
+        <TodoContext>
+            <ServiceContext>
                 <Router>
                     <NavBar></NavBar>
                     <br />
                     <div className="uk-container"  >
                         <Switch>
+                            <Route path="/finished/:id" render={(props) => <AddTodo {...props} />}>
+                            </Route>
+                            <Route path="/prefinished/:id" render={(props) => <AddTodo {...props} />}>
+                            </Route>
+                            <Route path="/info/:id" render={(props) => <AddTodo {...props} />}>
+                            </Route>
                             <Route path="/editTodo/:id" render={(props) => <AddTodo {...props} />}>
                             </Route>
                             <Route path="/addTodo">
@@ -37,8 +43,9 @@ const App = () => {
                         </Switch>
                     </div>
                 </Router>
-            </TodoContext>
-        </ServiceContext>
+            </ServiceContext>
+        </TodoContext>
+
     );
 }
 

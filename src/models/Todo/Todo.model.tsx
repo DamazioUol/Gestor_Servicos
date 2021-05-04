@@ -1,4 +1,5 @@
-import Service from "./Service.model";
+import Service from "../Service.model";
+import { TodoStatusEnum } from "./TodoStatusEnum";
 
 export default class Todo {
     constructor(
@@ -7,9 +8,10 @@ export default class Todo {
         public valorTotal: number,
         public placa: string,
         public modelo: string,
-        public done: boolean,
         public date: Date,
-        public modified?: Date
+        public status: TodoStatusEnum,
+        public modified?: Date,
+        public valorPaid?: number,
     ) {
 
     }

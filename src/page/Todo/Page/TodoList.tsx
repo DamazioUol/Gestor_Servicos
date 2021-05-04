@@ -31,7 +31,7 @@ interface ISearch {
 
 const TodoList = () => {
     const todoContext = useContext<ITodoContextType>(TodoContext);
-    const fieldsTable = ['', 'Modelo', 'Placa', 'Valor Total', 'Registro', 'Atualização', '', ''];
+    const fieldsTable = ['Modelo', 'Placa', 'Status', 'Valor Total', 'Registro', 'Modificação', '', ''];
     const pageSize: number = 5;
     const [pageData, setPageData] = useState<IPaginationData>(todoContext.getList({ totalCount: 0, page: 0, pageSize: pageSize, order: 'desc' }));
     const [search, setSearch] = useState<string>();
@@ -66,11 +66,11 @@ const TodoList = () => {
 
     return (
         <>
-            <div uk-margin="true">
+            <div className="uk-margin-small-bottom">
                 <div className="uk-align-left" style={cssDivormSearch}>
                     <form className="uk-search uk-search-default" style={cssFormSearch}>
                         <a onClick={handleSubmit<ISearch>(onSubmit)} className="uk-search-icon-flip" uk-search-icon="true"></a>
-                        <input {...register("search")} id="search" name="search" className="uk-search-input" type="text" placeholder="Serviço, modelo ou placa" />
+                        <input {...register("search")} id="search" name="search" className="uk-search-input" type="text" placeholder="Modelo ou placa" />
                     </form>
                 </div>
                 <div className="uk-align-right" style={cssMarginBottomUnset} >
@@ -80,7 +80,7 @@ const TodoList = () => {
                 </div>
             </div>
 
-            <table className="uk-table uk-table-striped uk-table-middle" >
+            <table className="uk-table uk-table-striped uk-table-middle " >
                 <thead>
                     <tr>
                         {fieldsTable.map((field, index) => {

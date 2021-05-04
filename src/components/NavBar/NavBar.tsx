@@ -66,14 +66,14 @@ const NavBar = () => {
                         </li>
                     </ul>
                     <div className="uk-navbar-center">
-                        <Link to="/" className="uk-navbar-item- uk-logo" style={cssTitleNavBar}>DamaMotos Serviços</Link>
+                        <Link to="/" className="uk-navbar-item- uk-logo" style={cssTitleNavBar}>Manager Services</Link>
                     </div>
                 </div>
             </div>
             <div id="offcanvas-overlay" uk-offcanvas="overlay: true">
                 <div className="uk-offcanvas-bar" style={cssSideBar}>
                     <div style={cssSideBarHeader}>
-                        <span>DamaMotos Serviços</span>
+                        <span>Manager Services</span>
                     </div>
                     <ul className="uk-nav uk-nav-default" style={cssSideBarItens}>
                         {/* <li key={9000} className="uk-offcanvas-close" style={cssItemMenuIconClose}>
