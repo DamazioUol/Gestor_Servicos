@@ -29,6 +29,7 @@ const Pagination = (filter: IPagination) => {
                 <li className={classDisabledPreviousPage}>
                     <a
                         href="#"
+                        uk-tooltip="Anterior"
                         onClick={() => filter.paginationFunction(pageCurrent - 1)}
                     >
                         <span style={cssPaginationPrevious} uk-pagination-previous="true"></span>
@@ -50,6 +51,7 @@ const Pagination = (filter: IPagination) => {
                 <li className={classDisabledNextPage}>
                     <a
                         href="#"
+                        uk-tooltip="Próximo"
                         onClick={() => filter.paginationFunction(pageCurrent + 1)}
                     >
                         <span style={cssPaginationNext} uk-pagination-next="true"></span>

@@ -69,12 +69,12 @@ const ServiceList = () => {
             <div>
                 <div className="uk-align-left" style={cssDivormSearch}>
                     <form className="uk-search uk-search-default" style={cssFormSearch}>
-                        <a onClick={handleSubmit<ISearch>(onSubmit)} className="uk-search-icon-flip" uk-search-icon="true"></a>
+                        <a uk-tooltip="Pesquisar" onClick={handleSubmit<ISearch>(onSubmit)} className="uk-search-icon-flip" uk-search-icon="true"></a>
                         <input {...register("search")} id="search" name="search" className="uk-search-input" type="text" placeholder="Serviço" />
                     </form>
                 </div>
                 <div className="uk-align-right" style={cssMarginBottomUnset} >
-                    <a className="uk-icon-button uk-button-secondary" style={cssPlus} href="/addService">
+                    <a uk-tooltip="Novo Serviço" className="uk-icon-button uk-button-secondary" style={cssPlus} href="/addService">
                         <span uk-icon="icon: plus; ratio: 1.5"></span>
                     </a>
                 </div>

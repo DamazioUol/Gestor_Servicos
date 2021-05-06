@@ -20,6 +20,7 @@ export const TodoContext = createContext<ITodoContextType>({
 });
 
 const TodoProvider = (props: any) => {
+
     const keyStorage = StorageConstants.todos;
     const [todos, setTodos] = useState<Todo[]>(GetStorage(keyStorage));
 
@@ -37,6 +38,10 @@ const TodoProvider = (props: any) => {
                 || item.placa.toLocaleLowerCase().includes(search)
                 || item.services.find(service => service.service.toLocaleLowerCase().includes(search))
             )
+        }
+
+        if (filter.status != null && filter.status != undefined) {
+            newTodos = newTodos.filter(item => item.status === filter.status)
         }
 
         const totalCount = newTodos.length;

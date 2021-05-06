@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-import { ITodoContextType } from '../../../contexts/Todo/ITodoContextType';
-import { TodoContext } from '../../../contexts/Todo/TodoContext';
+import React from 'react';
 import Todo from '../../../models/Todo/Todo.model';
 import { formatCurrencyMoneyWithSymbols, formatDateWithHours } from '../../../utils/Utils';
 
@@ -9,76 +7,58 @@ interface TodoListItemProps {
 }
 
 const TodoListItem = (props: TodoListItemProps) => {
-    const { removeTodo } = useContext<ITodoContextType>(TodoContext);
+    let statusDescription: string = "";
+    let icon: string = "";
+    let style: React.CSSProperties = {};
+    let urlPath: string = "";
+    let tooltip: string = "";
 
-    const getStatusDescription = () => {
-        switch (props.todo.status) {
-            case 0:
-                return "Pendente"
-            case 1:
-                return "Pré finalizado"
-            case 2:
-                return "Finalizado"
-        }
+    switch (props.todo.status) {
+        case 0:
+            statusDescription = "Pendente";
+            icon = "check";
+            style = { backgroundColor: 'green', color: 'black', border: '1px solid green', };
+            urlPath = `/prefinished/${props.todo.id}`;
+            tooltip = "Pré finalizar pedido";
+            break;
+        case 1:
+            statusDescription = "Pré finalizado";
+            icon = "cart";
+            style = { backgroundColor: 'yellow', color: 'black', border: '1px solid yellow', };
+            urlPath = `/finished/${props.todo.id}`;
+            tooltip = "Finalizar pedido";
+            break;
+        case 2:
+            statusDescription = "Finalizado";
+            icon = "ban";
+            style = { backgroundColor: 'white', border: '1px solid', };
+            urlPath = "#";
+            tooltip = "";
+            break;
     }
 
-    const getIcon = () => {
-        switch (props.todo.status) {
-            case 0:
-                return "check"
-            case 1:
-                return "cart"
-            case 2:
-                return "ban"
-        }
-    }
-
-    const getStyle = (): React.CSSProperties => {
-        switch (props.todo.status) {
-            case 0:
-                return { backgroundColor: 'green', color: 'black', border: '1px solid green', }
-            case 1:
-                return { backgroundColor: 'yellow', color: 'black', border: '1px solid yellow', }
-            default:
-                return { backgroundColor: 'white', border: '1px solid', };
-        }
-    }
-
-    const getUrl = () => {
-
-        switch (props.todo.status) {
-            case 0:
-                return `/prefinished/${props.todo.id}`
-            case 1:
-                return `/finished/${props.todo.id}`
-            case 3:
-                return "#"
-        }
-    }
 
     return (
         <tr className="uk-animation-slide-bottom-medium">
             <td className="uk-width-auto">{props.todo.modelo}</td>
             <td className="uk-width-auto">{props.todo.placa}</td>
-            <td className="uk-width-auto">{getStatusDescription()}</td>
+            <td className="uk-width-auto">{statusDescription}</td>
             <td className="uk-width-auto">{formatCurrencyMoneyWithSymbols(props.todo.valorTotal)}</td>
             <td className="uk-width-auto">{formatDateWithHours(props.todo.date)}</td>
             <td className="uk-width-auto">{formatDateWithHours(props.todo.modified)}</td>
 
-
-            {/* <td className="uk-width-auto">
-                <button onClick={() => removeTodo(props.todo)} className="uk-icon-button uk-button-danger" uk-icon="trash"></button>
-            </td> */}
             <td className="uk-width-auto">
-                <a className={`uk-icon-button`} href={getUrl()} style={getStyle()}>
-                    <span uk-icon={`icon: ${getIcon()}; ratio: 1.1`}></span>
+                <a uk-tooltip={tooltip} className={`uk-icon-button`} href={urlPath} style={style}>
+                    <span uk-icon={`icon: ${icon}; ratio: 1.1`}></span>
                 </a>
             </td>
+
             <td className="uk-width-auto">
-                <a className="uk-icon-button uk-button-secondary" href={`/info/${props.todo.id}`}>
+                <a uk-tooltip="Detalhe pedido" className="uk-icon-button uk-button-secondary" href={`/info/${props.todo.id}`}>
                     <span uk-icon="icon: info; ratio: 1.1"></span>
                 </a>
             </td>
+
         </tr>
     );
 };

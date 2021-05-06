@@ -60,7 +60,7 @@ const NavBar = () => {
                 <div className="uk-navbar-left">
                     <ul className="uk-navbar-nav">
                         <li className="menu-bars">
-                            <Link className="menu-bars" to="#" uk-toggle="target: #offcanvas-overlay" >
+                            <Link uk-tooltip="Menu" className="menu-bars" to="#" uk-toggle="target: #offcanvas-overlay" >
                                 <span style={cssIconPlusNavBar} uk-icon="icon: menu; ratio: 2"></span>
                             </Link>
                         </li>
@@ -84,7 +84,7 @@ const NavBar = () => {
                         {routerData.map((item, index) => {
                             return (
                                 <li key={index} >
-                                    <Link to={item.path} uk-toggle="target: #offcanvas-overlay" >
+                                    <Link uk-tooltip={item.title} to={item.path} uk-toggle="target: #offcanvas-overlay" >
                                         <span style={cssItemMenuIcon} uk-icon={`icon: ${item.icon}; ratio: 1.4`}></span>
                                         <span style={cssItemMenuSpan}>{item.title}</span>
                                     </Link>

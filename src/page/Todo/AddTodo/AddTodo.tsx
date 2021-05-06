@@ -153,8 +153,8 @@ function AddTodo(props?: any) {
 
     return (
         <>
-            <div className="uk-margin uk-flex uk-flex-right">
-                <a onClick={() => props.history.goBack()} className="uk-icon-button uk-button-secondary">
+            <div className="uk-margin uk-flex uk-flex-right" >
+                <a uk-tooltip="Voltar" onClick={() => props.history.goBack()} className="uk-icon-button uk-button-secondary">
                     <span uk-icon="icon: arrow-left; ratio: 1.5"></span>
                 </a>
             </div>
@@ -162,8 +162,8 @@ function AddTodo(props?: any) {
                 <fieldset className="uk-fieldset">
                     <legend className="uk-width-1-1">
                         <h4>{(editMode ? 'Editar ' : viewMode ? 'Detalhes ' : 'Nova ') + 'Ordem de Pedido'}
-                            <div className="uk-align-right" style={styleIconTrash()}>
-                                <a onClick={() => { }} className="uk-icon-button uk-button-danger">
+                            <div className="uk-align-right" style={styleIconTrash()} >
+                                <a uk-tooltip="Apagar pedido" onClick={() => { }} className="uk-icon-button uk-button-danger">
                                     <span uk-icon="icon: trash; ratio: 1.2"></span>
                                 </a>
                             </div>
@@ -182,7 +182,7 @@ function AddTodo(props?: any) {
                                 }
                             </select>
                             <div className="uk-align-right" style={(viewMode ? { display: 'none' } : cssMarginBottomUnset)} >
-                                <a onClick={addItemSeviceList} className="uk-icon-button uk-button-secondary" style={cssPlus} href="#">
+                                <a uk-tooltip="Adicionar serviço" onClick={addItemSeviceList} className="uk-icon-button uk-button-secondary" style={cssPlus} href="#">
                                     <span uk-icon="icon: plus; ratio: 1.5"></span>
                                 </a>
                             </div>
@@ -226,7 +226,7 @@ function AddTodo(props?: any) {
                                                     {formatCurrencyMoneyWithSymbols(item.value)}
                                                 </td>
                                                 <td className="uk-width-auto">
-                                                    <a onClick={() => { removeSeviceList(item) }} className="uk-icon-button uk-button-danger" style={(viewMode ? { display: 'none' } : cssPlus)} href="#">
+                                                    <a uk-tooltip="Remover serviço" onClick={() => { removeSeviceList(item) }} className="uk-icon-button uk-button-danger" style={(viewMode ? { display: 'none' } : cssPlus)} href="#">
                                                         <span uk-icon="icon: trash; ratio: 1.5"></span>
                                                     </a>
                                                 </td>

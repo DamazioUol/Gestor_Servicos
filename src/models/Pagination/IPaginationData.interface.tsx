@@ -6,4 +6,5 @@ export default interface IPaginationData {
     search?: string;
     total?: number; // total item list
     totalCount: number; // total all itens
+    status?: any;
 }

@@ -60,23 +60,30 @@ function AddService(props?: any) {
     }, []);
 
     return (
-        <form onSubmit={handleSubmit<AddServiceForm>(onSubmit)}>
-            <h4>{editMode ? 'Editar Serviço' : 'Novo Serviço'}</h4>
-            <div className="uk-margin uk-width-1-1">
-                <input className="uk-input" {...register("service")} type="text" name="service" id="service" placeholder="Informe a descrição do serviço" />
-                <span><small><strong className="uk-text-danger">{errors.service?.message}</strong></small></span>
-            </div>
-            <div className="uk-margin uk-width-1-1">
-                <input className="uk-input" {...register("value")} type="text" name="value" id="value" placeholder="Informe o valor do serviço" />
-                <span><small><strong className="uk-text-danger">{errors.value?.message}</strong></small></span>
-            </div>
-            <div className="uk-margin uk-align-right">
-                <a href="/todo" className="uk-button uk-button-danger" style={cssButtonSave}>
-                    <span>Cancelar</span>
+        <>
+            <div className="uk-margin uk-flex uk-flex-right" >
+                <a uk-tooltip="Voltar" onClick={() => props.history.goBack()} className="uk-icon-button uk-button-secondary">
+                    <span uk-icon="icon: arrow-left; ratio: 1.5"></span>
                 </a>
-                <button type="submit" className="uk-button uk-button-secondary" style={cssButtonSave}>Salvar</button>
             </div>
-        </form>
+            <form onSubmit={handleSubmit<AddServiceForm>(onSubmit)}>
+                <h4>{editMode ? 'Editar Serviço' : 'Novo Serviço'}</h4>
+                <div className="uk-margin uk-width-1-1">
+                    <input className="uk-input" {...register("service")} type="text" name="service" id="service" placeholder="Informe a descrição do serviço" />
+                    <span><small><strong className="uk-text-danger">{errors.service?.message}</strong></small></span>
+                </div>
+                <div className="uk-margin uk-width-1-1">
+                    <input className="uk-input" {...register("value")} type="text" name="value" id="value" placeholder="Informe o valor do serviço" />
+                    <span><small><strong className="uk-text-danger">{errors.value?.message}</strong></small></span>
+                </div>
+                <div className="uk-margin uk-align-right">
+                    <a href="/todo" className="uk-button uk-button-danger" style={cssButtonSave}>
+                        <span>Cancelar</span>
+                    </a>
+                    <button type="submit" className="uk-button uk-button-secondary" style={cssButtonSave}>Salvar</button>
+                </div>
+            </form>
+        </>
     );
 }
 export default AddService;

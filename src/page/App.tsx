@@ -25,8 +25,7 @@ const App = () => {
                             </Route>
                             <Route path="/editTodo/:id" render={(props) => <AddTodo {...props} />}>
                             </Route>
-                            <Route path="/addTodo">
-                                <AddTodo />
+                            <Route path="/addTodo" render={(props) => <AddTodo {...props} />}>
                             </Route>
                             <Route path="/todo">
                                 <TodoList />
@@ -34,8 +33,7 @@ const App = () => {
 
                             <Route path="/editService/:id" render={(props) => <AddService {...props} />}>
                             </Route>
-                            <Route path="/addService">
-                                <AddService />
+                            <Route path="/addService" render={(props) => <AddService {...props} />}>
                             </Route>
                             <Route path="/service">
                                 <ServiceList />
