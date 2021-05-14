@@ -42,10 +42,6 @@ const TodoList = () => {
     const [pageData, setPageData] = useState<IPaginationData>(todoContext.getList({ totalCount: 0, page: 0, pageSize: pageSize, order: 'desc' }));
     const [search, setSearch] = useState<ISearch>();
 
-    useEffect(() => {
-        getList(0);
-    }, [search])
-
     const getList = (pageNext: number) => {
         let filter: IPaginationData = {
             page: pageNext,
@@ -58,6 +54,10 @@ const TodoList = () => {
         let array = todoContext.getList(filter);
         setPageData(array);
     }
+
+    useEffect(() => {
+        getList(0);
+    }, [search])
 
     const getStatus = () => {
         switch (search?.status) {

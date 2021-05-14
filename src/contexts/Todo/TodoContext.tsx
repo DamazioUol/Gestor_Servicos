@@ -57,7 +57,7 @@ const TodoProvider = (props: any) => {
         }
 
         const skip = ((filter.page <= 0 ? 0 : filter.page - 1) * filter.pageSize);
-        const data = newTodos.slice(skip).slice(0, filter.pageSize);
+        const data = filter.pageSize == -1 ? newTodos : newTodos.slice(skip).slice(0, filter.pageSize);
 
         const retorno: IPaginationData = {
             data: data,
@@ -75,7 +75,7 @@ const TodoProvider = (props: any) => {
         return todos?.find(x => x.id === id) || null;
     };
 
-    const addTodo = (services: Service[], valorTotal: number, placa: string, modelo: string) => {
+    const addTodo = (services: Service[], valorTotal: number, placa: string, modelo: string, date: Date) => {
         let todo: Todo = {
             id: generateGuid(),
             services: services,
@@ -83,7 +83,7 @@ const TodoProvider = (props: any) => {
             placa: placa.toLocaleUpperCase(),
             modelo: modelo,
             status: TodoStatusEnum.pendente,
-            date: new Date(Date.now())
+            date: date
         };
         setTodos([...todos, todo]);
     };

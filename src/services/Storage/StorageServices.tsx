@@ -16,6 +16,5 @@ export const SaveStorage = (storage: string, data: any[]) => {
         }
     } catch (error) {
         console.log(error);
-        return [];
     }
 }

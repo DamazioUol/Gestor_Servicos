@@ -1,5 +1,9 @@
+import DateFnsUtils from '@date-io/date-fns';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useContext, useEffect, useState } from 'react';
+import { MenuItem, Select, TextField } from '@material-ui/core';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { pt } from 'date-fns/locale';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { } from 'react-router';
 import * as yup from 'yup';
@@ -12,6 +16,7 @@ import Todo from '../../../models/Todo/Todo.model';
 import { TodoStatusEnum } from '../../../models/Todo/TodoStatusEnum';
 import { formatCurrencyMoneyWithSymbols } from '../../../utils/Utils';
 
+
 interface AddTodoForm {
     service: string
     modelo: string,
@@ -20,8 +25,8 @@ interface AddTodoForm {
 
 const schema = yup.object().shape({
     service: yup.string(),
-    modelo: yup.string().required('Modelo da moto inválido'),
-    placa: yup.string().required('Placa da moto inválida'),
+    modelo: yup.string().trim().required('Modelo inválido'),
+    placa: yup.string().trim().required('Placa inválida'),
 })
 
 const cssPlus: React.CSSProperties = {
@@ -42,7 +47,6 @@ const cssButtonSave: React.CSSProperties = {
     marginLeft: '10px',
 }
 
-
 function AddTodo(props?: any) {
     let editMode = false;
     let viewMode: boolean = false;
@@ -50,7 +54,7 @@ function AddTodo(props?: any) {
     let todoEdit: Todo | null;
     let arrayServiceStandart: Service[] = []
     let newStatus: TodoStatusEnum | null;
-    let textButtonConfirm: string = "Salvar"
+    let textButtonConfirm: string = "Salvar";
 
     const getNewStatus = () => {
         switch (props.match.path) {
@@ -72,7 +76,9 @@ function AddTodo(props?: any) {
     const { register, handleSubmit, setValue, formState: { errors }, getValues } = useForm({
         resolver: yupResolver(schema),
     });
-    const { addTodo, editTodo, getItem } = useContext<ITodoContextType>(TodoContext);
+    const { addTodo, editTodo, getItem, removeTodo } = useContext<ITodoContextType>(TodoContext);
+
+    const [selectedDate, handleDateChange] = useState(new Date());
 
     if (props && props.match) {
         const { id } = props.match.params;
@@ -81,9 +87,9 @@ function AddTodo(props?: any) {
             editMode = true;
             todoEdit = getItem(idEdit);
             if (todoEdit) {
-                const fields = ['service', 'placa', 'modelo'];
-                setValue(fields[1], todoEdit.placa);
-                setValue(fields[2], todoEdit.modelo);
+                setValue('placa', todoEdit.placa);
+                setValue('modelo', todoEdit.modelo);
+                setValue('date', todoEdit.date);
                 arrayServiceStandart = todoEdit.services;
                 getNewStatus();
             }
@@ -98,13 +104,14 @@ function AddTodo(props?: any) {
 
     useEffect(() => {
         let valTotal: number = 0.00;
-        listServiceTodo.forEach((item) => valTotal += Number(item.value));
+        listServiceTodo.forEach((item: any) => valTotal += Number(item.value));
         setValorTotal(valTotal);
     }, [listServiceTodo])
 
     const onSubmit = (data: AddTodoForm, e: any) => {
         if (!editMode && !viewMode) {
-            addTodo(listServiceTodo, valorTotal, data.placa, data.modelo);
+            // let date = (selectedDate && selectedDate?.toDate() || new Date(Date.now()));
+            addTodo(listServiceTodo, valorTotal, data.placa, data.modelo, selectedDate);
             e.target.reset();
             window.location.href = '/todo';
         } else if (editMode) {
@@ -130,7 +137,7 @@ function AddTodo(props?: any) {
         let field = 'service';
         let idService = getValues(field);
         if (idService) {
-            let indexService = listServiceTodo.find(item => item.id === idService);
+            let indexService = listServiceTodo.find((item: any) => item.id === idService);
             if (!indexService) {
                 let newService = serviceList.data?.find((item: Service) => item.id === idService);
                 setListServiceTodo([...listServiceTodo, newService]);
@@ -144,63 +151,135 @@ function AddTodo(props?: any) {
         setListServiceTodo(newListServices);
     }
 
-    const styleIconTrash = () => {
+    const styleIconTrash = (): React.CSSProperties => {
         if (viewMode && todoEdit?.status != TodoStatusEnum.finalizado) {
             return { display: 'none' };
         }
-        return {};
+        return { marginBottom: 'unset' };
+    }
+
+    const removeTodoAndGoBack = () => {
+        if (todoEdit) {
+            removeTodo(todoEdit);
+            window.location.href = '/todo';
+        }
+    }
+
+    const GetDate = (props: any) => {
+        const value = !todoEdit ? selectedDate : getValues('date');
+        const disabled = todoEdit ? true : false;
+
+        return (
+            <div className="uk-margin uk-width-1 uk-flex ">
+                <div className="uk-width-1-4">
+                    <MuiPickersUtilsProvider locale={pt} utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            className="uk-input"
+                            id="date"
+                            disabled={disabled}
+                            name="date"
+                            value={value}
+                            onChange={(date, value) => {
+                                let newDate = date ? new Date(date) : new Date()
+                                setValue('date', newDate)
+                                handleDateChange(newDate);
+                            }}
+                            format="dd/MM/yyyy"
+                            required={true}
+                            placeholder="Insira a data do pedido"
+                        />
+                    </MuiPickersUtilsProvider>
+                    <span><small><strong className="uk-text-danger">{errors.date?.message}</strong></small></span>
+                </div>
+            </div>
+        )
     }
 
     return (
         <>
-            <div className="uk-margin uk-flex uk-flex-right" >
+            <div className="uk-margin uk-flex uk-flex-right uk-margin-small-bottom" >
                 <a uk-tooltip="Voltar" onClick={() => props.history.goBack()} className="uk-icon-button uk-button-secondary">
                     <span uk-icon="icon: arrow-left; ratio: 1.5"></span>
                 </a>
             </div>
-            <form onSubmit={handleSubmit<AddTodoForm>(onSubmit)} className="uk-margin-large-bottom ">
+            <form onSubmit={handleSubmit<AddTodoForm>(onSubmit)} className="uk-form uk-margin-large-bottom ">
                 <fieldset className="uk-fieldset">
-                    <legend className="uk-width-1-1">
+                    <legend className="uk-width-1-1" style={{ marginBottom: 'unset' }}>
                         <h4>{(editMode ? 'Editar ' : viewMode ? 'Detalhes ' : 'Nova ') + 'Ordem de Pedido'}
                             <div className="uk-align-right" style={styleIconTrash()} >
-                                <a uk-tooltip="Apagar pedido" onClick={() => { }} className="uk-icon-button uk-button-danger">
+                                <a uk-tooltip="Apagar pedido" onClick={() => removeTodoAndGoBack()} className="uk-icon-button uk-button-danger">
                                     <span uk-icon="icon: trash; ratio: 1.2"></span>
                                 </a>
                             </div>
                         </h4>
                     </legend>
-                    <div className="uk-margin uk-width-1-2">
+                    <div className="uk-margin uk-width-1 uk-flex uk-margin-large-bottom">
+
+                        <div className="uk-width-1-3">
+                            <TextField
+                                className="uk-input"
+                                value={getValues('modelo')}
+                                type="text"
+                                name="modelo"
+                                required={true}
+                                id="modelo"
+                                label="Modelo"
+                                onChange={modelo => setValue('modelo', modelo.target.value)}
+                                placeholder="Informe a modelo da moto"
+                            />
+                            <span><small><strong className="uk-text-danger">{errors.modelo?.message}</strong></small></span>
+                        </div>
+
+                        <div className="uk-width-1-4 uk-margin-medium-left" >
+                            <TextField
+                                className="uk-input"
+                                value={getValues('placa')}
+                                type="text"
+                                name="placa"
+                                required={true}
+                                id="placa"
+                                label="Placa"
+                                onChange={placa => { setValue('placa', placa.target.value); }}
+                                placeholder="Informe a placa do veículo"
+                            />
+
+                            <span><small><strong className="uk-text-danger">{errors.placa?.message}</strong></small></span>
+                        </div>
+
+                    </div>
+
+                    <GetDate key={100000} />
+
+                    <div className="uk-margin uk-margin-top uk-width-1-2">
                         <div className="uk-inline uk-width-1-1">
-                            <select  {...register("service")} className='uk-select' style={cssSelect} name="service" id="service">
-                                <option key={999999} value="">Selecione</option>
+                            <Select
+                                {...register("service")}
+                                style={cssSelect}
+                                name="service"
+                                id="service"
+                                value={getValues('select') || undefined}
+                                onChange={() => { }}
+                                placeholder="Selecione"
+                            >
+                                <MenuItem value={undefined}>Selecione</MenuItem>
                                 {
                                     serviceList.data?.map((item: Service, index) => {
                                         return (
-                                            <option key={index} value={item.id}>{item.service + " - " + formatCurrencyMoneyWithSymbols(item.value)}</option>
+                                            <MenuItem
+                                                key={index}
+                                                value={item.id}>
+                                                {item.service + " - " + formatCurrencyMoneyWithSymbols(item.value)}
+                                            </MenuItem>
                                         );
                                     })
                                 }
-                            </select>
+                            </Select>
                             <div className="uk-align-right" style={(viewMode ? { display: 'none' } : cssMarginBottomUnset)} >
                                 <a uk-tooltip="Adicionar serviço" onClick={addItemSeviceList} className="uk-icon-button uk-button-secondary" style={cssPlus} href="#">
                                     <span uk-icon="icon: plus; ratio: 1.5"></span>
                                 </a>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="uk-margin uk-width-1 uk-flex ">
-
-                        <div className="uk-width-1-3">
-                            <input className="uk-input" {...register("modelo")} type="text" name="modelo" id="modelo" placeholder="Informe a modelo da moto" />
-                            <span><small><strong className="uk-text-danger">{errors.modelo?.message}</strong></small></span>
-                        </div>
-
-                        <div className="uk-width-1-4 uk-margin-medium-left" >
-                            <input className="uk-input" {...register("placa")} type="text" name="placa" id="placa" placeholder="Informe a placa da moto" />
-                            <span><small><strong className="uk-text-danger">{errors.placa?.message}</strong></small></span>
-                        </div>
-
                     </div>
 
                     <div className="uk-margin uk-width-1-1">
