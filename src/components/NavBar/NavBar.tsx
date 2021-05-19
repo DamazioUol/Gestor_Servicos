@@ -1,64 +1,70 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { RouterData } from './RouterMenuData';
 
-const NavBar = () => {
+const cssNavBar: React.CSSProperties = {
+    backgroundColor: 'black',
+    padding: '0px 20px 0px 20px',
+    height: '80px',
+}
+const cssTitleNavBar: React.CSSProperties = {
+    color: 'white'
+}
+const cssIconPlusNavBar: React.CSSProperties = {
+    color: 'white',
+    fontSize: '15px',
+    fontWeight: 'bold',
+}
+
+const cssItemMenuIcon: React.CSSProperties = {
+    color: 'black',
+    fontWeight: 'bold',
+    marginRight: '10px',
+    marginBottom: '15px',
+}
+
+const cssItemMenuSpan: React.CSSProperties = {
+    color: 'black',
+    fontSize: '15px',
+    fontWeight: 'bold',
+}
+
+const cssSideBar: React.CSSProperties = {
+    backgroundColor: 'white',
+    padding: 'unset'
+}
+
+const cssSideBarItens: React.CSSProperties = {
+    backgroundColor: 'white',
+    padding: '10px 20px 10px 20px'
+}
+
+const cssSideBarHeader: React.CSSProperties = {
+    width: '100%',
+    height: '80px',
+    backgroundColor: 'black',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    color: 'white'
+}
+
+const NavBar = (props: RouteComponentProps) => {
     const routerData = RouterData;
-    const cssNavBar: React.CSSProperties = {
-        backgroundColor: 'black',
-        padding: '0px 20px 0px 20px',
-        height: '80px',
-    }
-    const cssTitleNavBar: React.CSSProperties = {
-        color: 'white'
-    }
-    const cssIconPlusNavBar: React.CSSProperties = {
-        color: 'white',
-        fontSize: '15px',
-        fontWeight: 'bold',
-    }
+    const loginPath = window.location.pathname.includes('/login');
+    const [showMenu, SetShowMenu] = useState<boolean>(true);
 
-    const cssItemMenuIcon: React.CSSProperties = {
-        color: 'black',
-        fontWeight: 'bold',
-        marginRight: '10px',
-        marginBottom: '15px',
-    }
-
-    const cssItemMenuSpan: React.CSSProperties = {
-        color: 'black',
-        fontSize: '15px',
-        fontWeight: 'bold',
-    }
-
-    const cssSideBar: React.CSSProperties = {
-        backgroundColor: 'white',
-        padding: 'unset'
-    }
-
-    const cssSideBarItens: React.CSSProperties = {
-        backgroundColor: 'white',
-        padding: '10px 20px 10px 20px'
-    }
-
-    const cssSideBarHeader: React.CSSProperties = {
-        width: '100%',
-        height: '80px',
-        backgroundColor: 'black',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: '20px',
-        fontWeight: 'bold',
-        color: 'white'
-    }
-
+    useEffect(() => {
+        SetShowMenu(!loginPath)
+    }, [loginPath])
 
     return (
         <>
             <div className="uk-navbar " style={cssNavBar} >
                 <div className="uk-navbar-left">
-                    <ul className="uk-navbar-nav">
+                    <ul className="uk-navbar-nav" style={showMenu ? {} : { display: 'none' }}>
                         <li className="menu-bars">
                             <Link uk-tooltip="Menu" className="menu-bars" to="#" uk-toggle="target: #offcanvas-overlay" >
                                 <span style={cssIconPlusNavBar} uk-icon="icon: menu; ratio: 2"></span>
@@ -66,7 +72,7 @@ const NavBar = () => {
                         </li>
                     </ul>
                     <div className="uk-navbar-center">
-                        <Link to="/" className="uk-navbar-item- uk-logo" style={cssTitleNavBar}>Manager Services</Link>
+                        <Link to={showMenu ? "/" : "#"} className="uk-navbar-item- uk-logo" style={cssTitleNavBar}>Manager Services</Link>
                     </div>
                 </div>
             </div>
@@ -76,15 +82,10 @@ const NavBar = () => {
                         <span>Manager Services</span>
                     </div>
                     <ul className="uk-nav uk-nav-default" style={cssSideBarItens}>
-                        {/* <li key={9000} className="uk-offcanvas-close" style={cssItemMenuIconClose}>
-                            <Link to="#" >
-                                <span style={cssItemMenuIcon} uk-close="true"></span>
-                            </Link>
-                        </li> */}
                         {routerData.map((item, index) => {
                             return (
                                 <li key={index} >
-                                    <Link uk-tooltip={item.title} to={item.path} uk-toggle="target: #offcanvas-overlay" >
+                                    <Link uk-tooltip={item.title} to={item.path} onClick={item.funtion ? item.funtion : () => { }} uk-toggle="target: #offcanvas-overlay" >
                                         <span style={cssItemMenuIcon} uk-icon={`icon: ${item.icon}; ratio: 1.4`}></span>
                                         <span style={cssItemMenuSpan}>{item.title}</span>
                                     </Link>
