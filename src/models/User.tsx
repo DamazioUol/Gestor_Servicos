@@ -1,8 +1,12 @@
 export default class User {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    date: Date;
-    modified?: Date;
+    constructor(
+        public id: string,
+        public name: string,
+        public email: string,
+        public password: string,
+        public date: Date,
+        public modified?: Date
+    ) {
+
+    }
 }

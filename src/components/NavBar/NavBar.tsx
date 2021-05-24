@@ -53,18 +53,20 @@ const cssSideBarHeader: React.CSSProperties = {
 
 const NavBar = (props: RouteComponentProps) => {
     const routerData = RouterData;
-    const loginPath = window.location.pathname.includes('/login');
-    const [showMenu, SetShowMenu] = useState<boolean>(true);
+    const pathname = window.location.pathname;
+    const route = routerData.find(x => x.path == pathname);
+    const pathHideMenu = route ? route.offline : true;
+    const [hideMenu, SetHideMenu] = useState<boolean>(true);
 
     useEffect(() => {
-        SetShowMenu(!loginPath)
-    }, [loginPath])
+        SetHideMenu(pathHideMenu)
+    }, [pathHideMenu])
 
     return (
         <>
             <div className="uk-navbar " style={cssNavBar} >
                 <div className="uk-navbar-left">
-                    <ul className="uk-navbar-nav" style={showMenu ? {} : { display: 'none' }}>
+                    <ul className="uk-navbar-nav" style={hideMenu ? { display: 'none' } : {}}>
                         <li className="menu-bars">
                             <Link uk-tooltip="Menu" className="menu-bars" to="#" uk-toggle="target: #offcanvas-overlay" >
                                 <span style={cssIconPlusNavBar} uk-icon="icon: menu; ratio: 2"></span>
@@ -72,7 +74,7 @@ const NavBar = (props: RouteComponentProps) => {
                         </li>
                     </ul>
                     <div className="uk-navbar-center">
-                        <Link to={showMenu ? "/" : "#"} className="uk-navbar-item- uk-logo" style={cssTitleNavBar}>Manager Services</Link>
+                        <Link to={hideMenu ? "#" : "/"} className="uk-navbar-item- uk-logo" style={cssTitleNavBar}>Manager Services</Link>
                     </div>
                 </div>
             </div>

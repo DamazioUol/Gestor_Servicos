@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { ILoginContextType } from '../../contexts/Login/ILoginContext';
 import { LoginContext } from '../../contexts/Login/LoginContext';
 
-interface ILogin {
+interface ILoginForm {
     email: string,
     password: string,
 }
@@ -23,7 +23,7 @@ function Login(props: any) {
     });
     const [loginValid, SetLoginValid] = useState<boolean>(true);
 
-    const onSubmit = (data: ILogin, e: any) => {
+    const onSubmit = (data: ILoginForm, e: any) => {
         SetLoginValid(true);
         const valid = login({ email: data.email, password: data.password });
         if (valid) {
@@ -42,7 +42,7 @@ function Login(props: any) {
                 </div>
                 <div className="uk-card-body ">
                     <div className="uk-flex uk-flex-center">
-                        <form onSubmit={handleSubmit<ILogin>(onSubmit)}>
+                        <form onSubmit={handleSubmit<ILoginForm>(onSubmit)}>
                             <div className="uk-margin uk-width-1-1">
                                 <input autoComplete="off" className="uk-input" {...register("email")} type="text" name="email" id="email" placeholder="Email" />
                                 <div className="uk-flex uk-flex-right">

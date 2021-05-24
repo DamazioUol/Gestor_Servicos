@@ -110,7 +110,6 @@ function AddTodo(props?: any) {
 
     const onSubmit = (data: AddTodoForm, e: any) => {
         if (!editMode && !viewMode) {
-            // let date = (selectedDate && selectedDate?.toDate() || new Date(Date.now()));
             addTodo(listServiceTodo, valorTotal, data.placa, data.modelo, selectedDate);
             e.target.reset();
             window.location.href = '/todo';

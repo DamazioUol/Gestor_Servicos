@@ -2,9 +2,9 @@ import Login from "../../models/Login";
 import User from "../../models/User";
 
 export interface ILoginContextType {
-    registerUser(user: User): void;
+    registerUser(userName: string, email: string, password: string): boolean;
     login(login: Login): boolean;
     editUser(login: User): void;
     deleteUser(login: User): void;
-    getInfo(user: User): Login | null;
+    getUserCurrent(): User;
 }

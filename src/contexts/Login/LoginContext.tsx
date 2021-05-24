@@ -11,7 +11,7 @@ export const LoginContext = createContext<ILoginContextType>({
     login: () => { return true },
     editUser: () => { return true },
     deleteUser: () => { return true },
-    getInfo: () => { return null },
+    getUserCurrent: () => { return null },
 });
 
 
@@ -20,41 +20,49 @@ const LoginProvider = (props: any) => {
     const keyStorageUsers = StorageConstants.users;
     const keyStorageUser = StorageConstants.user;
     const [users, setUsers] = useState<User[]>(GetStorage(keyStorageUsers));
+    const [userCurrent, setUserCurrent] = useState<User>(GetStorage(keyStorageUser));
 
     useEffect(() => {
+        SaveStorage(keyStorageUser, userCurrent);
         SaveStorage(keyStorageUsers, users);
-    }, [users]);
+    }, [users, userCurrent]);
 
-    const registerUser = (newUser: User) => {
+    const registerUser = (userName: string, email: string, password: string) => {
+        const userRegister = users.find(item => item.email = email);
+        if (userRegister) return false;
+
         const user: User = {
             id: generateGuid(),
-            name: newUser.name,
-            password: btoa(newUser.password),
-            email: newUser.email,
+            name: userName,
+            password: btoa(password),
+            email: email,
             date: new Date(Date.now())
         };
+        SaveStorage(keyStorageUser, user);
         setUsers([...users, user]);
+        return true;
     }
 
     const login = (login: Login) => {
-        const user = users.find(item => item.email = login.email && atob(login.password));
+        const user = users.find(item => item.email === login.email && item.password === btoa(login.password));
         if (user != null) SaveStorage(keyStorageUser, user);
         return user != null;
     }
 
     const editUser = (user: User) => {
-        let update = false;
+        let newUser = null;
         users.forEach(item => {
             if (item.id == user.id) {
-                update = true;
                 item.email = user.email;
-                item.password = isBase64(user.password) ? user.password : btoa(user.password);
-                item.email = user.email;
-                item.email = user.email;
+                item.password = !isBase64(user.password) ? user.password : btoa(user.password);
+                item.name = user.name;
+                item.modified = new Date(Date.now());
+                newUser = item;
             }
         });
 
-        if (update) {
+        if (newUser) {
+            setUserCurrent(newUser);
             setUsers([...users]);
         }
     }
@@ -67,15 +75,15 @@ const LoginProvider = (props: any) => {
     const deleteUser = (user: User) => {
         let newUsers = users.filter(x => x.id !== user.id);
         setUsers([...newUsers]);
+        window.location.href = "/login";
     }
 
-    const getInfo = (user: User) => {
-        const userFind = users.find(item => item.email == user.email);
-        return userFind;
+    const getUserCurrent = (): User => {
+        return userCurrent;
     }
 
     return (
-        <LoginContext.Provider value={{ registerUser, login, editUser, getInfo, deleteUser }}>
+        <LoginContext.Provider value={{ registerUser, login, editUser, getUserCurrent, deleteUser }}>
             { props.children}
         </LoginContext.Provider >
     );

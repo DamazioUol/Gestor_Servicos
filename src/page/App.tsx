@@ -10,6 +10,7 @@ import AddService from './Service/AddService/AddService';
 import ServiceList from './Service/Page/ServiceList';
 import AddTodo from './Todo/AddTodo/AddTodo';
 import TodoList from "./Todo/Page/TodoList";
+import AddUser from './User/AddUser';
 
 const App = () => {
     return (
@@ -35,6 +36,11 @@ const App = () => {
                                 <Route path="/editService/:id" render={(props) => <AddService {...props} />}>
                                 </Route>
                                 <Route path="/addService" render={(props) => <AddService {...props} />}>
+                                </Route>
+
+                                <Route path="/register" render={(props) => <AddUser {...props} />}>
+                                </Route>
+                                <Route path="/editUser" render={(props) => <AddUser {...props} />}>
                                 </Route>
 
                                 <Route path="/login" render={(props) => <Login {...props} />}>
