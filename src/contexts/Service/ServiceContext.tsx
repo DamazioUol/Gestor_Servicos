@@ -20,7 +20,7 @@ export const ServiceContext = createContext<IServiceContextType>({
 
 const ServiceProvider = (props: any) => {
     const keyStorage = StorageConstants.services;
-    const [services, setServices] = useState<Service[]>(GetStorage(keyStorage));
+    const [services, setServices] = useState<Service[]>(GetStorage(keyStorage) || []);
 
     useEffect(() => { // observar as mudanças realizadas no objetivo e automaticamente aciona o save.
         SaveStorage(keyStorage, services);

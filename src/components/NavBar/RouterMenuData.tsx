@@ -18,7 +18,7 @@ export const RouterData: IRouterData[] = [
         title: 'Sair', path: '/login', icon: 'sign-out', offline: true,
         funtion: () => {
             console.log('Logout user');
-            DeleteStorage(StorageConstants.user)
+            DeleteStorage(StorageConstants.token)
         }
     },
 ]

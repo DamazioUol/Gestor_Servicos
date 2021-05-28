@@ -17,6 +17,11 @@ interface AreaChartServiceDone {
     quantidade: number;
 }
 
+interface ChartData {
+    labels: string[];
+    datasets: any[];
+}
+
 function Home() {
     const backgroundColor = [
         'rgb(0,0,0,0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)',
@@ -50,8 +55,8 @@ function Home() {
     }
 
     const ref = useRef();
-    const [chartServiceFinalizado, setChartServiceFinalizado] = useState({});
-    const [chartServiceTop10, setChartServiceTop10] = useState({});
+    const [chartServiceFinalizado, setChartServiceFinalizado] = useState<ChartData>(null);
+    const [chartServiceTop10, setChartServiceTop10] = useState<ChartData>(null);
     const todoContext = useContext<ITodoContextType>(TodoContext);
     const [todos] = useState<IPaginationData>(todoContext.getList({ totalCount: 0, page: 0, pageSize: -1, order: 'asc' }));
     const semDadosMensagem = "Sem dados para apresentação.";
@@ -140,28 +145,28 @@ function Home() {
                 <div style={{ width: '900px' }} className="uk-margin uk-margin-large-bottom">
                     <h3 style={cssTitleChart}>{`Gráfico faturamento mensal(${new Date().getUTCFullYear()})`}</h3>
                     <Bar
-                        style={(chartServiceFinalizado as any).labels.length > 0 ? {} : { display: 'none' }}
+                        style={chartServiceFinalizado && chartServiceFinalizado.labels.length > 0 ? {} : { display: 'none' }}
                         itemID="barChart1"
                         ref={ref}
                         type="bar"
                         data={chartServiceFinalizado}
                         options={optionsChart}
                     />
-                    <h5 className="uk-text-danger" style={(chartServiceFinalizado as any).labels.length == 0 ? {} : { display: 'none' }}>{semDadosMensagem}</h5>
+                    <h5 className="uk-text-danger" style={chartServiceFinalizado && chartServiceFinalizado.labels.length == 0 ? {} : { display: 'none' }}>{semDadosMensagem}</h5>
                 </div>
             </div>
             <div style={cssDivChartDefault} className="uk-margin">
                 <div style={{ width: '900px' }} className="uk-margin uk-margin-large-bottom">
                     <h3 style={cssTitleChart}>{`Gráfico top 10 serviços realizados (ano atual - ${new Date().getUTCFullYear()})`}</h3>
                     <Bar
-                        style={(chartServiceTop10 as any).labels.length > 0 ? {} : { display: 'none' }}
+                        style={chartServiceTop10 && chartServiceTop10.labels.length > 0 ? {} : { display: 'none' }}
                         itemID="barChart2"
                         ref={ref}
                         type="bar"
                         data={chartServiceTop10}
                         options={optionsChart}
                     />
-                    <h5 className="uk-text-danger" style={(chartServiceTop10 as any).labels.length == 0 ? {} : { display: 'none' }}>{semDadosMensagem}</h5>
+                    <h5 className="uk-text-danger" style={chartServiceTop10 && chartServiceTop10.labels.length == 0 ? {} : { display: 'none' }}>{semDadosMensagem}</h5>
                 </div>
             </div>
         </>

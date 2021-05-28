@@ -1,11 +1,10 @@
 export const GetStorage = (storage: string) => {
-    const data = localStorage.getItem(storage) || '';
+    const data = localStorage.getItem(storage);
     try {
         const result = JSON.parse(data);
         return result;
     } catch (error) {
         console.log(error);
-        return [];
     }
 }
 

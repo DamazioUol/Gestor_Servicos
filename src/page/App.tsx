@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import GuardRoute from '../components/GuardRoute/GuardRoute';
 import NavBar from "../components/NavBar/NavBar";
 import LoginContext from '../contexts/Login/LoginContext';
 import ServiceContext from '../contexts/Service/ServiceContext';
@@ -22,45 +23,34 @@ const App = () => {
                         <br />
                         <div className="uk-container"  >
                             <Switch>
-                                <Route path="/finished/:id" render={(props) => <AddTodo {...props} />}>
-                                </Route>
-                                <Route path="/prefinished/:id" render={(props) => <AddTodo {...props} />}>
-                                </Route>
-                                <Route path="/info/:id" render={(props) => <AddTodo {...props} />}>
-                                </Route>
-                                <Route path="/editTodo/:id" render={(props) => <AddTodo {...props} />}>
-                                </Route>
-                                <Route path="/addTodo" render={(props) => <AddTodo {...props} />}>
-                                </Route>
 
-                                <Route path="/editService/:id" render={(props) => <AddService {...props} />}>
-                                </Route>
-                                <Route path="/addService" render={(props) => <AddService {...props} />}>
-                                </Route>
+                                <GuardRoute path="/finished/:id" component={AddTodo} auth={true} />
+                                <GuardRoute path="/prefinished/:id" component={AddTodo} auth={true} />
+                                <GuardRoute path="/info/:id" component={AddTodo} auth={true} />
+                                <GuardRoute path="/editTodo/:id" component={AddTodo} auth={true} />
 
-                                <Route path="/register" render={(props) => <AddUser {...props} />}>
-                                </Route>
-                                <Route path="/editUser" render={(props) => <AddUser {...props} />}>
-                                </Route>
+                                <GuardRoute path="/editService/:id" component={AddService} auth={true} />
+                                <GuardRoute path="/editService/:id" component={AddService} auth={true} />
 
-                                <Route path="/login" render={(props) => <Login {...props} />}>
-                                </Route>
+                                <GuardRoute path="/editService/:id" component={AddService} auth={true} />
+                                <GuardRoute path="/addService" component={AddService} auth={true} />
 
-                                <Route path="/service">
-                                    <ServiceList />
-                                </Route>
-                                <Route path="/todo">
-                                    <TodoList />
-                                </Route>
-                                <Route path="/">
-                                    <Home />
-                                </Route>
+                                <GuardRoute path="/register" component={AddUser} auth={false} />
+                                <GuardRoute path="/editUser" component={AddUser} auth={true} />
+
+                                <GuardRoute path="/service" component={ServiceList} auth={true} />
+                                <GuardRoute path="/login" component={Login} auth={false} />
+
+                                <GuardRoute path="/todo" component={TodoList} auth={true} />
+                                <GuardRoute path="/addTodo" component={AddTodo} auth={true} />
+
+                                <GuardRoute path="/" component={Home} auth={true} />
                             </Switch>
                         </div>
                     </Router>
                 </ServiceContext>
             </TodoContext>
-        </LoginContext>
+        </LoginContext >
     );
 }
 

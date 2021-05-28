@@ -4,5 +4,5 @@ export const StorageConstants: IStorage = {
     todos: 'todos',
     services: 'services',
     users: 'users',
-    user: 'user'
+    token: 'token'
 }

@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { StorageConstants } from "../../environment/Storage";
 import Login from "../../models/Login";
+import Token from "../../models/Token";
 import User from "../../models/User";
 import { GetStorage, SaveStorage } from "../../services/Storage/StorageServices";
 import { generateGuid } from "../../utils/Utils";
@@ -18,14 +19,14 @@ export const LoginContext = createContext<ILoginContextType>({
 const LoginProvider = (props: any) => {
 
     const keyStorageUsers = StorageConstants.users;
-    const keyStorageUser = StorageConstants.user;
-    const [users, setUsers] = useState<User[]>(GetStorage(keyStorageUsers));
-    const [userCurrent, setUserCurrent] = useState<User>(GetStorage(keyStorageUser));
+    const keyStorageToken = StorageConstants.token;
+    const [users, setUsers] = useState<User[]>(GetStorage(keyStorageUsers) || []);
+    const [token, setToken] = useState<Token>(GetStorage(keyStorageToken));
 
     useEffect(() => {
-        SaveStorage(keyStorageUser, userCurrent);
+        SaveStorage(keyStorageToken, token);
         SaveStorage(keyStorageUsers, users);
-    }, [users, userCurrent]);
+    }, [users, token]);
 
     const registerUser = (userName: string, email: string, password: string) => {
         const userRegister = users.find(item => item.email = email);
@@ -38,15 +39,27 @@ const LoginProvider = (props: any) => {
             email: email,
             date: new Date(Date.now())
         };
-        SaveStorage(keyStorageUser, user);
+        generateToken(user);
         setUsers([...users, user]);
         return true;
     }
 
     const login = (login: Login) => {
         const user = users.find(item => item.email === login.email && item.password === btoa(login.password));
-        if (user != null) SaveStorage(keyStorageUser, user);
+        if (user != null) {
+            generateToken(user);
+        }
         return user != null;
+    }
+    const generateToken = (user: User) => {
+        const dateCurrent = new Date(Date.now());
+        const dateExpired = new Date(new Date(Date.now()).setDate(dateCurrent.getDate() + 1));
+        const token = new Token(
+            user,
+            dateCurrent,
+            dateExpired
+        );
+        setToken(token);
     }
 
     const editUser = (user: User) => {
@@ -62,8 +75,8 @@ const LoginProvider = (props: any) => {
         });
 
         if (newUser) {
-            setUserCurrent(newUser);
-            setUsers([...users]);
+            generateToken(user);
+            setUsers([...users, user]);
         }
     }
 
@@ -79,7 +92,7 @@ const LoginProvider = (props: any) => {
     }
 
     const getUserCurrent = (): User => {
-        return userCurrent;
+        return token.user;
     }
 
     return (
