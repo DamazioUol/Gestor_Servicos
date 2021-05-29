@@ -24,7 +24,7 @@ const TodoProvider = (props: any) => {
     const keyStorage = StorageConstants.todos;
     const [todos, setTodos] = useState<Todo[]>(GetStorage(keyStorage) || []);
 
-    useEffect(() => { // observar as mudanças realizadas no objetivo e automaticamente aciona o save.
+    useEffect(() => {
         SaveStorage(keyStorage, todos);
     }, [todos]);
 

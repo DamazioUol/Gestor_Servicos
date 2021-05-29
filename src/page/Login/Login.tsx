@@ -69,15 +69,7 @@ function Login(props: any) {
                             </div>
                         </form>
                     </div>
-                    {/* <div className="uk-flex uk-flex-center">
-                        <a href="/register" style={{ color: 'black', fontSize: '12px', marginLeft: '130px' }} >
-                            <span>Registrar-se</span>
-                        </a>
-                    </div> */}
                 </div>
-                {/* <div className="uk-card-footer uk-margin uk-flex uk-flex-center" >
-                    <button type="submit" className="uk-button uk-button-secondary" >Entrar</button>
-                </div> */}
             </div>
         </div>
     )

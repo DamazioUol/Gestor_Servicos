@@ -14,7 +14,6 @@ const keyStorageToken = StorageConstants.token;
 const authentication = {
     isLoggedIn: false,
     onAuthenticatino() {
-        console.log(' onAuthenticatino');
         const token: Token = GetStorage(keyStorageToken);
         const expired = token && token.expired ? new Date(token.expired) <= new Date(Date.now()) : true;
         if (expired) {
@@ -27,7 +26,6 @@ const authentication = {
     },
     getLoginStatus() {
         this.onAuthenticatino();
-        console.log(' getLoginStatus');
         return this.isLoggedIn;
     }
 }

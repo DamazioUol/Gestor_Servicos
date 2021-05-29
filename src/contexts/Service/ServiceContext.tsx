@@ -22,7 +22,7 @@ const ServiceProvider = (props: any) => {
     const keyStorage = StorageConstants.services;
     const [services, setServices] = useState<Service[]>(GetStorage(keyStorage) || []);
 
-    useEffect(() => { // observar as mudanças realizadas no objetivo e automaticamente aciona o save.
+    useEffect(() => {
         SaveStorage(keyStorage, services);
     }, [services]);
 
